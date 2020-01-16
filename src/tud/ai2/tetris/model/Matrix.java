@@ -388,7 +388,15 @@ public class Matrix {
         return null;
     }
 
-    // TODO Aufgabe 3a)
+// TODO Aufgabe 3a)
+    /**
+     * Den Index der Zeile über dem obersten belegten Block in Spalte x
+	 * unterhalb der Zeile y brechnen.
+     *
+     * @param x: Spalte
+     * @param y: Zeile
+     * @return Hoehe des obersten belegten Blocks.
+     */
     private int gibHoehe(int x, int y) {
     	for(int i = y-1; i >= 0; i--) {
     		if(gibBlock(x,i) != null)
@@ -399,10 +407,19 @@ public class Matrix {
     }
 
 
-    // TODO Aufgabe 3b)
+
+// TODO Aufgabe 3b)
+    /**
+     * Brechnet die Zeile, in der der untere Rand des Steins aufsetzen wird
+     * ,wenn er gerade hinunter fällt.
+     *
+     * @param stein: Aktueller Stein.
+     * @return Der Aufsetzpunkt.
+     */
     public int aufsetzpunkt(Stein stein) {
         // IHRE IMPLEMENTIERUNG
-    	int min = this.hoehe, aufSetPunk = 0;
+        int min = this.hoehe, aufSetPunk = 0;
+        //Finden die mindesten Abstand zwischen dem Stein und dem unten Block
     	for(int i = stein.gibLinks(); i < stein.gibLinks() + stein.gibForm().gibBreite(); i++) {
     		for(int j = stein.gibUnten(); j< stein.gibUnten() + stein.gibForm().gibHoehe(); j++) {
     			if(stein.gibForm().istBelegt(i-stein.gibLinks(), j-stein.gibUnten())) {
@@ -417,7 +434,14 @@ public class Matrix {
         return aufSetPunk;
     }
 
-    // TODO Aufgabe 3d)
+// TODO Aufgabe 3d)
+    /**
+     * Stein in der Matrix ablegen
+     *
+     * @param stein: Aktueller Stein.
+     * @return true, wenn der Aufsetzpunkt des Steins kleiner als die maximale
+     *         Zeilenanzahl – 1 ist, false ansonten.
+     */
     private boolean manifestieren(Stein stein) {
         // IHRE IMPLEMENTIERUNG
     	int original_aufsetpunkt = this.aufsetzpunkt(stein);
