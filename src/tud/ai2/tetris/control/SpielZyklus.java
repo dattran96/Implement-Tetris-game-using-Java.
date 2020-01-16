@@ -51,7 +51,6 @@ public class SpielZyklus implements Runnable {
      */
     public void run() {
         int oldZeilen = tetris.gibMatrix().gibVolleZeilen();
-        System.out.println("RUNTestIn");
         // Laufe nur weiter, wenn im aktuellen Schritt etwas getan wurde
         if(tetris.gibMatrix().aufraeumen() || schritt()) {
             tetris.gibMainFrame().repaint();

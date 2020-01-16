@@ -118,7 +118,18 @@ public class Matrix {
     private void loescheBlock(int x, int y) {
         setzeBlock(x,y,null);
     }
-
+    /**
+     * Finde den zugehörigen Stein an x,y basiert auf steinIdx. Um das zu machen 
+     * gucken wir rekursiv den nachbaren Block für dasselbe SteinIndx an. Die Kondition eine 
+     * rekursive Funktion zu stoppen ist, wenn die SteinIndex des nachbaren Blocks
+     *  anders als das suchende SteinIndex  ist.
+     * @param x X-Koordinate des Blocks
+     * @param y Y-Koordinate des Blocks
+     * @param steinIdx SteinIndex des Blocks
+     * @param xs die X-Koordinate-Liste aller zugehörigen Blöcke
+     * @param ys die y-Koordinate-Liste aller zugehörigen Blöcke
+     *   
+    */
  // TODO Aufgabe 5a)
     private void floodfill(int x, int y, int steinIdx, List<Integer> xs, List<Integer> ys) {
         // IHRE IMPLEMENTIERUNG
@@ -131,7 +142,6 @@ public class Matrix {
         	return;
         int old_steinIdx = steinIdx;
         
-        //System.out.println("Before Floodfill");
         if(this.gibBlock(x,y).gibSteinIdx()==old_steinIdx)
         {
             //If the same SteinIndex found, add to xs,ys matrix
@@ -139,19 +149,19 @@ public class Matrix {
             ys.add(new Integer(y));
             this.loescheBlock(x, y);
             //recursively call to check Neighbor's Block before go back to original one
-            System.out.println("Before Floodfill");
             floodfill(x,y+1,check_block.gibSteinIdx(),xs,ys);
-            System.out.println("Flood 1");
             floodfill(x, y-1, check_block.gibSteinIdx(),xs, ys);
-            System.out.println("Flood 2");
             floodfill(x+1, y, check_block.gibSteinIdx(),xs, ys);
-            System.out.println("Flood 3");
             floodfill(x-1, y, check_block.gibSteinIdx(),xs, ys);
-            System.out.println("Flood 4");
         }
     }
 
-
+    /**
+     * Finde das Boundary des rechteckige Forms 
+     * @param xs die X-Koordinate-Liste aller zugehörigen Blöcke
+     * @param ys die y-Koordinate-Liste aller zugehörigen Blöcke
+     * @return Array, der untere,obere,linke,rechte Grenze des Steins enthält.
+    */
     // TODO Aufgabe 5b)
     private int[] boundingBox(List<Integer> xs, List<Integer> ys) {
         // IHRE IMPLEMENTIERUNG
@@ -199,10 +209,14 @@ public class Matrix {
         
         return bound_result;
     }
-
+    /**
+     * Erstelle einen neuen Stein, gegeben die Liste von aller X- und Y-Koordinate. Um
+     * das zu machen rufen wir die Funktion boundingBox auf, um alle Grenze des Forms 
+     * zu generieren. Dann benutzen wir den Konstruktor, um einen Stein zu bilden.
+     * @return einen Stein object für das Erweitere Physik 
+    */
     // TODO Aufgabe 5c)
     private Stein erstelleStein(List<Integer> xs, List<Integer> ys, Color farbe) {
-        // IHRE IMPLEMENTIERUNG
         // IHRE IMPLEMENTIERUNG
         //Ruf boundingBox auf, um die Grenzen des Forms zu generieren
   	
@@ -210,7 +224,6 @@ public class Matrix {
         //generieren neuen Form
         boolean[][] Form_Stein = new boolean[boundary_stein[3]-boundary_stein[2]+1][boundary_stein[1]-boundary_stein[0]+1];
         
-        //System.out.println("x offset:"+ (boundary_stein[1]-boundary_stein[0]+1) + " y offset:"+(boundary_stein[3]-boundary_stein[2]+1));
         //Set origin Coordinator: links,oben
         int orginCoordin_x = boundary_stein[0];
         int orginCoordin_y = boundary_stein[2];
@@ -237,12 +250,9 @@ public class Matrix {
             Form_Stein[ys_true-orginCoordin_y][xs_true-orginCoordin_x]=true;
 
         }
-        
         //Create new Stein and retern this Stein
         //Constructor : Stein(Matrix,Form,Unten,Links)
-        System.out.println("Form Length:"+Form_Stein[0].length);
         return new Stein(this,new Form(Form_Stein,farbe),orginCoordin_y, orginCoordin_x);
-        //return new Stein(this, Const.I);
     }
 
     /** Ermittelt den Stein, der mit dem Block in Spalte x und
@@ -255,7 +265,6 @@ public class Matrix {
      */
     private Stein nimmStein(int x, int y) {
         // Leerstelle, dann gibt es auch keinen Stein
-    	System.out.println("nimm x"+x+" "+y);
         if(gibBlock(x,y)==null) return null;
 
        // Farbe uebernehmen, Liste der Positionen initialisieren
@@ -265,25 +274,25 @@ public class Matrix {
         final List<Integer> ys = new ArrayList<>();
 
         // Floodfill, um zusammenhaengende Bloecke zu finden
-        System.out.println("Check here before FloodFill--------------");
-        System.out.println("x: "+x+" y:"+y);
         floodfill(x,y,gibBlock(x,y).gibSteinIdx(),xs,ys);
         Iterator<Integer> loopxs = xs.iterator();
         Iterator<Integer> loopys = ys.iterator();
         if(loopxs.hasNext())
         {
-        	System.out.println("Array:"+"xs:"+loopxs.next()+" ys:"+loopys.next());
         }
-        System.out.println("Check here after FloodFill----------------");
         return erstelleStein(xs, ys, farbe);
     }
 
 
     // TODO Aufgabe 4a)
+    /**
+     * Überpruf ob es eine volle Zeile gibt.Wenn das der Fall ist, ändern wir die 
+     * Farbe diser Zeile zu Schwarz und erhöhen wir das Variable volleZeilen um 1.
+    */
     private void faerbeVolleZeilen() {
         // IHRE IMPLEMENTIERUNG
     	//Überpruf Vollbarkeit und Schwarz färben
-    	////////////////////////Access Zeile of Matrix, check Farbe of each Block in this Zeile
+    	//Access Zeile of Matrix, check Farbe of each Block in this Zeile
         Iterator<Block[]> iter  = belegung.iterator();
         while(iter.hasNext())
         {
@@ -314,7 +323,11 @@ public class Matrix {
         }
     }
 
-
+    /**
+     * Loop over all rows and find the black row. If a black row is found, then we
+     * remove that row out of the Matrix.
+     * @return true if there is a removed row, otherwise return false.
+    */
     // TODO Aufgabe 4b)
     private boolean loescheSchwarzeZeilen(){
         // IHRE IMPLEMENTIERUNG
@@ -413,11 +426,9 @@ public class Matrix {
     			if(stein.gibForm().istBelegt(i - stein.gibLinks(), j - stein.gibUnten())) {
     				Block neuBlock = new Block(stein.gibSteinIndex(), stein.gibForm().gibFarbe());
     				this.setzeBlock(i,j-stein.gibUnten()+original_aufsetpunkt , neuBlock);
-    				System.out.println("original_aufsetpunkt:"+original_aufsetpunkt+" und temp_aufsetpunkt:"+this.aufsetzpunkt(stein));
     			}
     		}
     	}
-    	System.out.println("Hohe:"+this.hoehe+" aufsetpunkt:"+this.aufsetzpunkt(stein)+" Unten:"+stein.gibUnten());
     	if(this.aufsetzpunkt(stein) < this.hoehe -1)
     		return true;
         return false;

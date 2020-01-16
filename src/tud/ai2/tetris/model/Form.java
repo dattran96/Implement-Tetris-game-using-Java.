@@ -85,10 +85,8 @@ public class Form {
  // TODO Aufgabe 2a)
     public boolean istBelegt(int spalte, int zeile) {
         // IHRE IMPLEMENTIERUNG
-    	//System.out.println("Spalte:"+spalte+" "+"Zeile"+zeile+" "+"hoehe"+this.hoehe);
         if(raster[zeile][spalte]==true)
         {
-        	//System.out.println("Hallo");
             return true;
         }
         else

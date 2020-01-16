@@ -155,7 +155,6 @@ public class Stein {
     public boolean fallen() {
         // IHRE IMPLEMENTIERUNG
     	if(this.unten != this.matrix.aufsetzpunkt(this)) {
-    		System.out.println("Change Unten");
     		this.unten -=1;
     		return true;
     	}
